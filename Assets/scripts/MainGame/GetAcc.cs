@@ -81,7 +81,7 @@ public class GetAcc : MonoBehaviour {
 		}
 	}
 
-	int getDirection(){
+	public int getDirection(){
 		return ret;
 	}
 
