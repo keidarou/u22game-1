@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class movetheball : MonoBehaviour
 {
-
+    //よく考えたら１８０度回転させたとき死ぬやんこれ
     //--------------------変数-------------------//
     bool idouchuu = true;//移動中ならfalse
-    Transform mokutekidown, nowdown, mokutekiup, nowup;//mokutekiは行くべき場所、nowは今の位置,upは上向きのボール、downは下向きのボール
+                         //    Transform mokutekidown,  mokutekiup;//mokutekiは行くべき場所、nowは今の位置,upは上向きのボール、downは下向きのボール
     int nowrotation;//今のスマホの回転度
     GetAcc acc;//どれくらい回転しているかをみるため
     public GameObject mapgenerator, balldown, ballup;//それぞれのゲームオブジェクト、分からなければ連絡よろ
@@ -60,22 +60,20 @@ public class movetheball : MonoBehaviour
 
     bool ballmove()//玉を動かすぞい
     {
-        nowdown.position = balldown.transform.position;//ダウンボールの位置を代入
-        nowup.position = ballup.transform.position;//アップボールの位置を代入
+        balldown.transform.position = balldown.transform.position;//ダウンボールの位置を代入
+        ballup.transform.position = ballup.transform.position;//アップボールの位置を代入
         int movexhoukou = 0, moveyhoukou = 0;//下向きがどの方向に行くか、つまり、x=1,y=0で右方向に１進むみたいな
         if (nowrotation == 0) { movexhoukou = 0; moveyhoukou = -1; }//もし、下向きなら
         if (nowrotation == 1) { movexhoukou = 1; moveyhoukou = 0; }//右
         if (nowrotation == 2) { movexhoukou = 0; moveyhoukou = 1; }//上
         if (nowrotation == 3) { movexhoukou = -1; moveyhoukou = 0; }//左
-        mokutekidown.position = nowdown.position;//とりあえず初期化
-        mokutekidown.position += new Vector3(movexhoukou * haba*down, moveyhoukou * haba*down, 0.00f);//目的なので、それに方向×距離を足す
-        mokutekiup.position = nowup.position;//同様
-        mokutekiup.position += new Vector3(-1 * movexhoukou * haba*up, -1 * moveyhoukou * haba*up, 0.00f);//同様
         Vector3 upvectormokuteki, upvectornow, downvectornow, downvectormokuteki;//移動にはvectorにする必要がある
-        upvectornow = nowup.position;//今
-        upvectormokuteki = mokutekiup.position;//目的
-        downvectornow = nowdown.position;//同じ
-        downvectormokuteki = mokutekidown.position;//同じ
+        downvectormokuteki = balldown.transform.position;//とりあえず初期化
+        downvectormokuteki += new Vector3(movexhoukou * haba * down, moveyhoukou * haba * down, 0.00f);//目的なので、それに方向×距離を足す
+        upvectormokuteki = ballup.transform.position;//同様
+        upvectormokuteki += new Vector3(-1 * movexhoukou * haba * up, -1 * moveyhoukou * haba * up, 0.00f);//同様
+        upvectornow = ballup.transform.position;//今
+        downvectornow =balldown.transform.position;//同じ
         ballup.transform.position = Vector3.Lerp(upvectornow, upvectormokuteki, 2);//Lerpですすむ、AnimationCurveであとで速さとか調節、第三引数ようわからないのでデバッグ
         balldown.transform.position = Vector3.Lerp(downvectornow, downvectormokuteki, 2);
 
@@ -85,8 +83,8 @@ public class movetheball : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        mapgenerator = GameObject.Find("mapgenerator");//mapgeneratorからmapの配列をひくため、ただ、これ呼ばれる順番が怪しい
-        map = GetComponent<mapgenerator>().map;//これ、こっちの方が速く実行されていたらしぬので、そこを注意
+        //  mapgenerator = GameObject.Find("mapgenerator");//mapgeneratorからmapの配列をひくため、ただ、これ呼ばれる順番が怪しい
+        map = mapgenerator.GetComponent<mapgenerator>().map;//これ、こっちの方が速く実行されていたらしぬので、そこを注意
         acc = GetComponent<GetAcc>();//GetAccスクリプト
         nowrotation = 0;//最初のスマホの角度代入
     }
