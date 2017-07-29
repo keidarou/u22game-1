@@ -9,6 +9,10 @@ using UnityEngine.SceneManagement;
 
 public class MoveScene : UIBehaviour {
 
+
+	public int [,] mapData=new int[12,12];
+
+
 	protected override void Start () {
 
 		base.Start ();

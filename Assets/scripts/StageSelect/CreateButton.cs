@@ -3,6 +3,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 public class CreateButton : MonoBehaviour {
 
@@ -16,11 +18,14 @@ public class CreateButton : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i--) {
 			for (int j = 0; j < 5; j++) {
 				GameObject button = (GameObject)Instantiate(stageButton) as GameObject;
 				button.transform.parent = this.transform;
-				button.transform.position = new Vector3(kankakux*j+kiteix,kankakuy*i+kiteiy,0);
+				button.transform.position = new Vector3(kankakux*j+kiteix,kankakuy*(-i)+kiteiy,0);
+
+				Text text = button.GetComponentInChildren<Text> ();
+				text.text = string.Format("{0}{1}","STAGE",Convert.ToString(i * 5 + j+1));
 
 			}
 		}
