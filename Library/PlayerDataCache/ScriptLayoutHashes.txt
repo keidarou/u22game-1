@@ -137,5 +137,5 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.Spa
 3d027b75915e3e056f85a3f0415d4182 Assembly-CSharp.dll:.CameraFollow
 6afcd419533f9487f45a9db22dc16c10 Assembly-CSharp.dll:.mapgenerator
 9ab1a40f8a52b940f4a789baddca3c72 Assembly-CSharp.dll:.GeneratorScript
-cdc6a450ddefbf85a5793699c93277b4 Assembly-CSharp.dll:.movetheball
+502db6baf71b0f6df272d3da7a0a1a9a Assembly-CSharp.dll:.movetheball
 131d11613abe966aedb24432068a23be Assembly-CSharp.dll:.mousecontroller

@@ -20,19 +20,19 @@ public class automaticgenerator : MonoBehaviour
     {
         for (int i = 0; i < range; i++)
         {
-            if (map[x, y] == 1 && kakutei[x, y] == true)
+            if (map[y, x] == 1 && kakutei[y, x] == true)
             {
                 return false;
             }
             x += movex; y += movey;
         }
-        if (map[x, y] == 0 && kakutei[x, y] == true) { return false; }
-        map[x, y] = 1; kakutei[x, y] = true;
+        if (map[y, x] == 0 && kakutei[y,x] == true) { return false; }
+        map[y, x] = 1; kakutei[y, x] = true;
 
         for (int i = 0; i < range; i++)
         {
             x -= movex; y -= movey;
-            map[x, y] = 0; kakutei[x, y] = true;
+            map[y, x] = 0; kakutei[y, x] = true;
         }
         return true;
     }
@@ -58,7 +58,7 @@ public class automaticgenerator : MonoBehaviour
                 if (muki == previous) { continue; }
                 if (muki == (previous + 2) % 4) { continue; }
 
-                if (muki == 0)
+                if (muki == 0)//した
                 {
                     range = Random.Range(0, nowy);//壁を作る一歩手前で止まる
                     if (range % 2 == 1) { continue; }

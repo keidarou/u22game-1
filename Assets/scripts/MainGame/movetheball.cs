@@ -15,23 +15,24 @@ public class movetheball : MonoBehaviour
     int down, up;//downは重力に従って落ちるボールが何マス落ちるか、upはその逆
     public int nowupx, nowupy, nowdownx, nowdowny;//グリッド表示での現在の座標
     public float speed;
-    public float haba;//移動する量、つまり一マスの間隔
+    public float haba,kyoyouhanni;//移動する量、つまり一マスの間隔、許容範囲はボールのスピードを上げたとき、値を大きくしないとだめ！
     int karix, kariy;
-    Vector3 upvectormokuteki, upvectornow, downvectornow, downvectormokuteki = Vector3.zero,directiondown,directionup;//移動にはvectorにする必要がある
+    public int kaisuuseigen;
+    private GUIStyle labelStyle;
+    Vector3 upvectormokuteki, upvectornow, downvectornow, downvectormokuteki = Vector3.zero, directiondown, directionup;//移動にはvectorにする必要がある
     //-------------------------------------------------
     //内容としては、玉が動き終わって、スマホの方向、位置が与えられたとき、どの方向に何マス動くかというのを返します。
     //返すといっても変数の中に格納しておくだけです。返り値はないです。
 
     int Selectrange(int x, int y, int nowx, int nowy)//このx,yはx方向にどれだけ、y方向も同様なので、通常x,y=1,0・0,1・-1,0・0,-1
     {
-        int count = 0;//
+        int count = 0;
         while (true)
         {
-            if (map[nowx + x, nowy + y] == 1)
+            if (map[nowy+y , nowx+x ] == 1)
             {
                 karix = nowx; kariy = nowy;
                 return count;//壁に当たったら、何マス行けたかを返す
-
             }
             nowx += x; nowy += y; count++;
         }
@@ -42,9 +43,9 @@ public class movetheball : MonoBehaviour
         //方向を把握していないので、適当に0を上、1を右、2を下、3を左にします
         if (Direction == 2)//上向きの重力
         {
-            up = Selectrange(0, -1, nowupx, nowupy);
+            up = Selectrange(0, 1, nowupx, nowupy);
             nowupx = karix; nowupy = kariy;
-            down = Selectrange(0, 1, nowdownx, nowdowny);
+            down = Selectrange(0, -1, nowdownx, nowdowny);
             nowdownx = karix; nowdowny = kariy;
         }
         else if (Direction == 1)//右
@@ -57,9 +58,9 @@ public class movetheball : MonoBehaviour
         }
         else if (Direction == 0)//下
         {
-            up = Selectrange(0, 1, nowupx, nowupy);
+            up = Selectrange(0, -1, nowupx, nowupy);
             nowupx = karix; nowupy = kariy;
-            down = Selectrange(0, -1, nowdownx, nowdowny);
+            down = Selectrange(0, 1, nowdownx, nowdowny);
             nowdownx = karix; nowdowny = kariy;
         }
         else//左
@@ -81,12 +82,14 @@ public class movetheball : MonoBehaviour
         if (nowrotation == 1) { movexhoukou = 1; moveyhoukou = 0; }//右!
         if (nowrotation == 2) { movexhoukou = 0; moveyhoukou = 1; }//上!!
         if (nowrotation == 3) { movexhoukou = -1; moveyhoukou = 0; }//左!!
-        Debug.Log(up);Debug.Log(down);
+        Debug.Log(up); Debug.Log(down);
         downvectormokuteki = balldown.transform.position;//とりあえず初期化
         downvectormokuteki += new Vector3(movexhoukou * haba * down, moveyhoukou * haba * down, 0f);//目的なので、それに方向×距離を足す
         upvectormokuteki = ballup.transform.position;//同様
         upvectormokuteki -= new Vector3(movexhoukou * haba * up, moveyhoukou * haba * up, 0f);//同様
-        Debug.Log(movexhoukou);Debug.Log(moveyhoukou);
+
+        //  Debug.Log(movexhoukou);Debug.Log(moveyhoukou);
+
         upvectornow = ballup.transform.position;//今
         downvectornow = balldown.transform.position;//同じ
 
@@ -102,6 +105,22 @@ public class movetheball : MonoBehaviour
         nowrotation = 0;//最初のスマホの角度代入
         upvectormokuteki = ballup.transform.position;
         downvectormokuteki = balldown.transform.position;
+
+
+        //フォントさくせい
+        this.labelStyle = new GUIStyle();
+        this.labelStyle.fontSize = Screen.height / 20;
+        this.labelStyle.normal.textColor = Color.black;
+        /*Debug.Log(map[10, 7]);
+        Debug.Log("up");
+        Debug.Log(Selectrange(0, -1, nowdownx, nowdowny));
+        Debug.Log("down");
+        Debug.Log(Selectrange(0, 1, nowdownx, nowdowny));
+        Debug.Log("left");
+        Debug.Log(Selectrange(-1, 0, nowdownx, nowdowny));
+        Debug.Log("right");
+        Debug.Log(Selectrange(1, 0, nowdownx, nowdowny));*/
+
     }
 
     // Update is called once per frame
@@ -116,15 +135,26 @@ public class movetheball : MonoBehaviour
             idouchuu = false;//移動中
             nowrotation = acc.getDirection();//スマホの角度代入
             selectDirectionandrange(nowrotation);//上向きに何マス、下向きに何マス移動するかをメモ
+            kaisuuseigen--;
             ballmove();//動かす！
-            idouchuu = true;//もう動いていないよお
         }
-     //   if (Vector3.Distance(downvectormokuteki, downvectornow) >= 0.1&& Vector3.Distance(upvectormokuteki, upvectornow) >= 0.1)
-        //{
+        if (Vector3.Distance(downvectormokuteki, downvectornow) <= kyoyouhanni && Vector3.Distance(upvectormokuteki, upvectornow) <= kyoyouhanni)//スピードを上げたら、この中の値を大きくしないとだめ！
+        {
+            idouchuu = true;
+        }
+        else
+        {
             directionup = (upvectormokuteki - upvectornow).normalized;
             directiondown = (downvectormokuteki - downvectornow).normalized;
             ballup.transform.Translate(directionup * Time.deltaTime * speed, Space.World);
             balldown.transform.Translate(directiondown * Time.deltaTime * speed, Space.World);
-        //}
+        }
+    }
+
+    void OnGUI()
+    {
+        string s = string.Format("{0}Times Left", kaisuuseigen);
+        GUI.Label(new Rect(1600, 50, 100, 30),s ,labelStyle);
     }
 }
+//map[y][x]、縦に移動するときはぎゃく！（配列の性質的に、上の方が小さい

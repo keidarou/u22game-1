@@ -69,9 +69,3 @@ public class mapgenerator : MonoBehaviour
 
     }
 }
-/*
- -4
- -4
- 1
-
-     */
