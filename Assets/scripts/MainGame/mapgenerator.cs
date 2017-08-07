@@ -12,7 +12,7 @@ public class mapgenerator : MonoBehaviour
         {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0 },
         {1,0,0,0,0,0,1,0,1,1,1,1,1,0,0,0,1,0,0,0,0,0},
         {1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
-        {1,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,1,0,0,0,0,0},
+        {1,0,0,0,0,0,0,0,1,1,1,0,1,0,0,0,1,0,0,0,0,0},
         {1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0 },
         {1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1 ,0,0,0,0,0},
         {1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1 ,0,0,0,0,0},
@@ -33,8 +33,6 @@ public class mapgenerator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
-        int hairetusize = width * 2 - 1;
         //縦に連なった壁
         for (int i = 0; i < width; i++)
         {
@@ -45,7 +43,7 @@ public class mapgenerator : MonoBehaviour
                 {
                     int jj = j / 2, ii = i / 2;
                     GameObject instanttate = (GameObject)Instantiate(tate);
-                    instanttate.transform.position = new Vector3(kiteix + haba * jj, kiteiy + haba * ii + 0.5f, z);
+                    instanttate.transform.position = new Vector3(-kiteix - haba *(width/2- jj+1), kiteiy + haba * (width/2-ii+1) - 0.5f, z);
                 }
             }
         }
@@ -59,7 +57,7 @@ public class mapgenerator : MonoBehaviour
                 {
                     int jj = j / 2, ii = i / 2;
                     GameObject instanttate = (GameObject)Instantiate(yoko);
-                    instanttate.transform.position = new Vector3(kiteix + haba * jj + 0.5f, kiteiy + haba * ii, z);
+                    instanttate.transform.position = new Vector3(-kiteix - haba * (width/2+1-jj) + 0.5f, kiteiy + haba *( width/2-ii+1), z);
                 }
             }
         }
@@ -71,3 +69,9 @@ public class mapgenerator : MonoBehaviour
 
     }
 }
+/*
+ -4
+ -4
+ 1
+
+     */

@@ -32,7 +32,7 @@ public class GetAcc : MonoBehaviour {
 
 		float d = Mathf.Atan2 (acc.y, acc.x);
 
-		if (rd <= d && d < ru) {
+		/*if (rd <= d && d < ru) {
 			ret = 1;
 		} else if (ru <= d && d < lu) {
 			ret = 2;
@@ -40,11 +40,12 @@ public class GetAcc : MonoBehaviour {
 			ret = 3;
 		} else {
 			ret = 0;
-		}
-
-
-
-	}
+		}*/
+        if (Input.GetKeyDown(KeyCode.DownArrow)) { ret = 0; }
+        if (Input.GetKeyDown(KeyCode.UpArrow)) { ret = 2; }
+        if (Input.GetKeyDown(KeyCode.RightArrow)) { ret = 1; }
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) { ret = 3; }
+    }
 	//GUIこうしん(デバックじ以外はコメントアウトで)
 	void OnGUI(){
 		if (acc != null) {
