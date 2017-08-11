@@ -15,7 +15,7 @@ public class movetheball : MonoBehaviour
     int down, up;//downは重力に従って落ちるボールが何マス落ちるか、upはその逆
     public int nowupx, nowupy, nowdownx, nowdowny;//グリッド表示での現在の座標
     public float speed;
-    public float haba,kyoyouhanni;//移動する量、つまり一マスの間隔、許容範囲はボールのスピードを上げたとき、値を大きくしないとだめ！
+    public float haba, kyoyouhanni;//移動する量、つまり一マスの間隔、許容範囲はボールのスピードを上げたとき、値を大きくしないとだめ！
     int karix, kariy;
     public int kaisuuseigen;
     private GUIStyle labelStyle;
@@ -29,7 +29,12 @@ public class movetheball : MonoBehaviour
         int count = 0;
         while (true)
         {
-            if (map[nowy+y , nowx+x ] == 1)
+            if (map[nowy + y, nowx + x] == 1 && map[nowy + y - x, nowx + x - y] == 1 && map[nowy + y + x, nowx + x + y] == 1)
+            {
+                karix = nowx; kariy = nowy;
+                return count;//壁に当たったら、何マス行けたかを返す
+            }
+            else if (map[nowy + y, nowx + x] == 1 && map[nowy + y + y, nowx + x + x] == 1 && map[nowy + y + y + y, nowx + x + x + x] == 1) //3連もだめ
             {
                 karix = nowx; kariy = nowy;
                 return count;//壁に当たったら、何マス行けたかを返す
@@ -82,7 +87,7 @@ public class movetheball : MonoBehaviour
         if (nowrotation == 1) { movexhoukou = 1; moveyhoukou = 0; }//右!
         if (nowrotation == 2) { movexhoukou = 0; moveyhoukou = 1; }//上!!
         if (nowrotation == 3) { movexhoukou = -1; moveyhoukou = 0; }//左!!
-        Debug.Log(up); Debug.Log(down);
+                                                                    // Debug.Log(up); Debug.Log(down);
         downvectormokuteki = balldown.transform.position;//とりあえず初期化
         downvectormokuteki += new Vector3(movexhoukou * haba * down, moveyhoukou * haba * down, 0f);//目的なので、それに方向×距離を足す
         upvectormokuteki = ballup.transform.position;//同様
@@ -100,7 +105,7 @@ public class movetheball : MonoBehaviour
     void Start()
     {
         //  mapgenerator = GameObject.Find("mapgenerator");//mapgeneratorからmapの配列をひくため、ただ、これ呼ばれる順番が怪しい
-        map = mapgenerator.GetComponent<mapgenerator>().map;//これ、こっちの方が速く実行されていたらしぬので、そこを注意
+        map = mapgenerator.GetComponent<automaticgenerator>().map;//これ、こっちの方が速く実行されていたらしぬので、そこを注意
         acc = GetComponent<GetAcc>();//GetAccスクリプト
         nowrotation = 0;//最初のスマホの角度代入
         upvectormokuteki = ballup.transform.position;
@@ -111,7 +116,6 @@ public class movetheball : MonoBehaviour
         this.labelStyle = new GUIStyle();
         this.labelStyle.fontSize = Screen.height / 20;
         this.labelStyle.normal.textColor = Color.black;
-        /*Debug.Log(map[10, 7]);
         Debug.Log("up");
         Debug.Log(Selectrange(0, -1, nowdownx, nowdowny));
         Debug.Log("down");
@@ -119,8 +123,7 @@ public class movetheball : MonoBehaviour
         Debug.Log("left");
         Debug.Log(Selectrange(-1, 0, nowdownx, nowdowny));
         Debug.Log("right");
-        Debug.Log(Selectrange(1, 0, nowdownx, nowdowny));*/
-
+        Debug.Log(Selectrange(1, 0, nowdownx, nowdowny));
     }
 
     // Update is called once per frame
@@ -142,19 +145,21 @@ public class movetheball : MonoBehaviour
         {
             idouchuu = true;
         }
-        else
-        {
-            directionup = (upvectormokuteki - upvectornow).normalized;
-            directiondown = (downvectormokuteki - downvectornow).normalized;
-            ballup.transform.Translate(directionup * Time.deltaTime * speed, Space.World);
-            balldown.transform.Translate(directiondown * Time.deltaTime * speed, Space.World);
-        }
+         else
+         {
+             directionup = (upvectormokuteki - upvectornow).normalized;
+             directiondown = (downvectormokuteki - downvectornow).normalized;
+             ballup.transform.Translate(directionup * Time.deltaTime * speed, Space.World);
+             balldown.transform.Translate(directiondown * Time.deltaTime * speed, Space.World);
+         }
+      //  ballup.transform.position = upvectormokuteki;
+       // balldown.transform.position = downvectormokuteki;
     }
 
     void OnGUI()
     {
         string s = string.Format("{0}Times Left", kaisuuseigen);
-        GUI.Label(new Rect(1600, 50, 100, 30),s ,labelStyle);
+        GUI.Label(new Rect(1600, 50, 100, 30), s, labelStyle);
     }
 }
 //map[y][x]、縦に移動するときはぎゃく！（配列の性質的に、上の方が小さい

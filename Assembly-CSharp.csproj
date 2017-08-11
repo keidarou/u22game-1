@@ -58,6 +58,7 @@
      <Compile Include="Assets\scripts\MainGame\GetAcc.cs" />
      <Compile Include="Assets\scripts\MainGame\mapgenerator.cs" />
      <Compile Include="Assets\scripts\MainGame\movetheball.cs" />
+     <Compile Include="Assets\scripts\MainGame\thisisgomi.cs" />
      <Compile Include="Assets\scripts\StageSelect\CreateButton.cs" />
      <Compile Include="Assets\scripts\StageSelect\MoveScene.cs" />
      <Compile Include="Assets\scripts\Title\TitleButton.cs" />
